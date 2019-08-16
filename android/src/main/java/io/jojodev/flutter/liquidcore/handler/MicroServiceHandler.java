@@ -163,12 +163,10 @@ public class MicroServiceHandler implements MethodChannel.MethodCallHandler {
         public void onStart(MicroService service) {
             if (microServiceMethodChannel != null) {
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
-                  @Override
-                  public void run() {
+                    @Override
+                    public void run() {
                         microServiceMethodChannel.invokeMethod("listener.onStart", buildArguments(serviceId, null));
-                      
-                    // Call the desired channel message here.
-                  }
+                    }
                 });
             }
         }
@@ -208,10 +206,17 @@ public class MicroServiceHandler implements MethodChannel.MethodCallHandler {
                     }
                 }
 
-                Map<String, Object> map = new HashMap<>();
-                map.put("event", event);
-                map.put("payload", payloadObject);
-                microServiceMethodChannel.invokeMethod("listener.onEvent", buildArguments(serviceId, map));
+
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        final Map<String, Object> map = new HashMap<>();
+                        map.put("event", event);
+                        map.put("payload", payloadObject);
+                        microServiceMethodChannel.invokeMethod("listener.onEvent", buildArguments(serviceId, map));
+                    }
+                });
+
             }
         }
     }
