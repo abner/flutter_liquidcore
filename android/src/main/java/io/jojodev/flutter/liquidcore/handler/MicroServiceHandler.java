@@ -1,7 +1,8 @@
 package io.jojodev.flutter.liquidcore.handler;
 
 import android.content.Context;
-
+import android.os.Handler;
+import android.os.Looper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -161,7 +162,14 @@ public class MicroServiceHandler implements MethodChannel.MethodCallHandler {
         @Override
         public void onStart(MicroService service) {
             if (microServiceMethodChannel != null) {
-                microServiceMethodChannel.invokeMethod("listener.onStart", buildArguments(serviceId, null));
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                  @Override
+                  public void run() {
+                        microServiceMethodChannel.invokeMethod("listener.onStart", buildArguments(serviceId, null));
+                      
+                    // Call the desired channel message here.
+                  }
+                });
             }
         }
 
