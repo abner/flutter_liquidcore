@@ -207,12 +207,13 @@ public class MicroServiceHandler implements MethodChannel.MethodCallHandler {
                 }
 
 
+                final Map<String, Object> map = new HashMap<>();
+                map.put("event", event);
+                map.put("payload", payloadObject);
+                
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
-                        final Map<String, Object> map = new HashMap<>();
-                        map.put("event", event);
-                        map.put("payload", payloadObject);
                         microServiceMethodChannel.invokeMethod("listener.onEvent", buildArguments(serviceId, map));
                     }
                 });
